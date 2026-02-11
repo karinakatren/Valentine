@@ -1,473 +1,393 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Will you be my Valentine? 💘</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <style>
-    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+<title>Will you be my Valentine? 💘</title>
 
-    body{
-      margin:0;
-      min-height:100vh;
-      display:grid;
-      place-items:center;
-      background: radial-gradient(1200px 700px at 30% 20%, #2a1458 0%, #0b0f19 55%, #070a12 100%);
-      color:#eef2ff;
-      overflow:hidden;
-    }
+<style>
 
-    /* ❤️ Hearts layer (background) */
-    .hearts{
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      overflow:hidden;
-      z-index:0;
-    }
-    .heart{
-      position:absolute;
-      bottom:-28px;
-      opacity:.88;
-      animation: floatUp linear forwards;
-      will-change: transform, opacity;
-      filter: drop-shadow(0 10px 22px rgba(0,0,0,.25));
-    }
-    @keyframes floatUp{
-      to{
-        transform: translateY(-120vh) rotate(12deg);
-        opacity:0;
-      }
-    }
+:root{
+  font-family: system-ui, -apple-system, Segoe UI, Roboto;
+}
 
-    .card{
-      position:relative;
-      z-index:2;
-      width:min(680px, 92vw);
-      background:rgba(255,255,255,0.07);
-      border:1px solid rgba(255,255,255,0.14);
-      border-radius:20px;
-      padding:22px;
-      box-shadow:0 20px 70px rgba(0,0,0,0.45);
-      backdrop-filter: blur(10px);
-    }
-
-    h1{ margin:0 0 8px; font-size:24px; letter-spacing:.2px; }
-    .sub{ margin:0 0 16px; opacity:.9; }
-
-    .arena{
-      position:relative;
-      height:270px;
-      border-radius:16px;
-      background:rgba(255,255,255,0.05);
-      border:1px dashed rgba(255,255,255,0.22);
-      overflow:hidden;
-      display:grid;
-      place-items:center;
-    }
-
-    .btn{
-      appearance:none;
-      border:0;
-      border-radius:999px;
-      padding:12px 18px;
-      font-size:16px;
-      font-weight:800;
-      cursor:pointer;
-      user-select:none;
-      touch-action:manipulation;
-      transform: translateZ(0);
-    }
-
-    .yes{ background:#22c55e; color:#06120a; }
-    .no{
-      position:absolute;
-      background:#ef4444;
-      color:#1a0606;
-    }
-
-    /* We will NOT update this after YES (only hugs line stays) */
-    .result{
-      margin-top:14px;
-      min-height:54px;
-      line-height:1.35;
-      padding:12px 14px;
-      border-radius:14px;
-      background:rgba(0,0,0,0.25);
-      border:1px solid rgba(255,255,255,0.10);
-    }
-    .small{ opacity:.9; font-size:13px; margin-top:8px; }
-
-    /* ===== 🐸 FINAL OVERLAY (frog + roses) ===== */
-    #finalOverlay{
-      position:fixed;
-      inset:0;
-      display:none;
-      place-items:center;
-      z-index:9999;
-      background: rgba(0,0,0,0.62);
-    }
-    #finalOverlay.show{
-      display:grid;
-      animation: overlayFade .22s ease-out both;
-    }
-    @keyframes overlayFade{
-      from{ opacity:0; }
-      to{ opacity:1; }
-    }
-
-    /* roses behind everything in overlay */
-    .roseRain{
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      overflow:hidden;
-    }
-    .rose{
-      position:absolute;
-      top:-48px;
-      opacity:.92;
-      animation: roseFall linear forwards;
-      filter: drop-shadow(0 12px 28px rgba(0,0,0,.38));
-      will-change: transform, opacity;
-    }
-    @keyframes roseFall{
-      to{
-        transform: translateY(120vh) rotate(40deg);
-        opacity:0;
-      }
-    }
-
-/* layout inside overlay card */
-.finalCard{
-  position:relative;
-  width:min(760px, 92vw);
-  height:min(86vh, 720px);
-  padding:18px;
-  border-radius:22px;
-  background:rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.14);
-  box-shadow:0 30px 90px rgba(0,0,0,0.55);
-  backdrop-filter: blur(10px);
+body{
+  margin:0;
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  background: radial-gradient(circle at 20% 20%, #2a1458, #070a12);
+  color:white;
   overflow:hidden;
+}
+
+/* ❤️ HEARTS */
+
+.hearts{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+}
+
+.heart{
+  position:absolute;
+  bottom:-40px;
+  animation: floatUp linear forwards;
+  opacity:.9;
+}
+
+@keyframes floatUp{
+  to{
+    transform:translateY(-120vh);
+    opacity:0;
+  }
+}
+
+/* CARD */
+
+.card{
+  position:relative;
+  z-index:2;
+  width:min(650px,90vw);
+  padding:26px;
+  border-radius:22px;
+  backdrop-filter:blur(12px);
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.15);
+  box-shadow:0 25px 80px rgba(0,0,0,.5);
+}
+
+.arena{
+  position:relative;
+  height:260px;
+  margin-top:18px;
+  border-radius:18px;
+  border:1px dashed rgba(255,255,255,.3);
+  display:grid;
+  place-items:center;
+}
+
+button{
+  border:none;
+  padding:14px 22px;
+  border-radius:999px;
+  font-size:17px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.yes{
+  background:#22c55e;
+}
+
+.no{
+  position:absolute;
+  background:#ff4757;
+}
+
+.result{
+  margin-top:14px;
+  opacity:.95;
+}
+
+/* ============================= */
+/* 🐸 FINAL OVERLAY */
+/* ============================= */
+
+#finalOverlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  place-items:center;
+  background:rgba(0,0,0,.72);
+  z-index:9999;
+}
+
+#finalOverlay.show{
+  display:grid;
+}
+
+/* roses */
+
+.roseRain{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+.rose{
+  position:absolute;
+  top:-50px;
+  animation:roseFall linear forwards;
+}
+
+@keyframes roseFall{
+  to{
+    transform:translateY(120vh) rotate(50deg);
+    opacity:0;
+  }
+}
+
+/* card */
+
+.finalCard{
+  width:min(780px,92vw);
+  height:min(85vh,720px);
+  border-radius:26px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18);
+  backdrop-filter:blur(14px);
   display:flex;
   flex-direction:column;
   justify-content:space-between;
+  align-items:center;
+  padding:24px;
   text-align:center;
 }
 
-/* Top + Bottom text pinned */
+/* top / bottom */
+
 .finalTop,
 .finalBottom{
-  font-weight:950;
-  letter-spacing:1.6px;
-  font-size: clamp(30px, 4.2vw, 52px);
-  text-transform: uppercase;
-  position:relative;
-  z-index:2;
+  font-weight:900;
+  letter-spacing:2px;
+  font-size: clamp(32px,4vw,56px);
 }
-.finalTop{ margin-top:4px; }
-.finalBottom{ margin-bottom:6px; }
+
+/* frog center */
 
 .finalCenter{
   position:relative;
-  z-index:2;
   display:grid;
   place-items:center;
-  gap:12px;
-  padding:6px 0;
+  gap:10px;
 }
 
-/* Frog spin-in */
+/* SPIN FROG */
+
 #finalFrog{
-  width:min(420px, 88vw);
+  width:min(420px,88vw);
   border-radius:20px;
-  box-shadow:0 26px 70px rgba(0,0,0,.55);
-  background:#fff;
+  background:white;
   opacity:0;
-  transform: scale(.55) rotate(-260deg);
-  transition: transform .85s cubic-bezier(.2,1.35,.25,1), opacity .25s ease;
+  transform:scale(.2) rotate(-720deg);
 }
 
 #finalOverlay.show #finalFrog{
-  opacity:1;
-  transform: scale(1) rotate(0deg);
+  animation:frogSpin 1.1s cubic-bezier(.2,1.4,.3,1) forwards;
 }
 
-/* Kiss "цьомчик" */
+@keyframes frogSpin{
+  0%{
+    transform:scale(.2) rotate(-720deg);
+    opacity:0;
+  }
+
+  70%{
+    transform:scale(1.1) rotate(20deg);
+    opacity:1;
+  }
+
+  100%{
+    transform:scale(1) rotate(0deg);
+  }
+}
+
+/* 💋 KISS */
+
 .kiss{
   position:absolute;
-  top: 18%;
-  right: 18%;
-  font-size: 44px;
+  top:12%;
+  right:18%;
+  font-size:56px;
   opacity:0;
-  transform: translateY(10px) scale(.6);
-  filter: drop-shadow(0 10px 22px rgba(0,0,0,.35));
-  transition: transform .6s cubic-bezier(.2,1.4,.25,1), opacity .25s ease;
 }
 
 #finalOverlay.show .kiss{
-  opacity:1;
-  transform: translateY(0) scale(1);
+  animation:kissPop .8s .4s forwards;
 }
 
-/* little “pop” animation for the kiss */
-#finalOverlay.show .kiss{
-
-  animation: kissPop .7s cubic-bezier(.2,1.6,.25,1) .15s both;
-}
 @keyframes kissPop{
-  0%{ transform: translateY(10px) scale(.4); opacity:0; }
-  70%{ transform: translateY(-6px) scale(1.08); opacity:1; }
-  100%{ transform: translateY(0) scale(1); opacity:1; }
+  0%{
+    transform:scale(.2);
+    opacity:0;
+  }
+
+  70%{
+    transform:scale(1.3);
+  }
+
+  100%{
+    transform:scale(1);
+    opacity:1;
+  }
 }
 
-.hugsLine{
-  opacity:.95;
+.hugs{
+  opacity:.9;
   font-size:14px;
-  text-transform:none;
 }
-    }
-    @keyframes cardPop{
-      to{
-        transform: translateY(0) scale(1);
-        opacity:1;
-      }
-    }
 
-    .finalText{
-      position:relative;
-      z-index:2;
-      margin-bottom:10px;
-      text-transform: uppercase;
-    }
-    .forYou{
-      font-weight:950;
-      letter-spacing:1.6px;
-      font-size: clamp(30px, 4vw, 46px);
-    }
-    .monCoeur{
-      font-weight:950;
-      letter-spacing:1.4px;
-      font-size: clamp(30px, 4vw, 48px);
-      margin-top:6px;
-    }
-
-    .hugsLine{
-      margin-top:10px;
-      opacity:.95;
-      font-size: 14px;
-      text-transform:none;
-    }
-
-    #finalFrog{
-      width:min(420px, 88vw);
-      border-radius:20px;
-      box-shadow:0 26px 70px rgba(0,0,0,.55);
-      transform: translateY(18px) scale(.86);
-      opacity:0;
-      transition: transform .65s cubic-bezier(.2,1.35,.25,1), opacity .35s ease;
-      position:relative;
-      z-index:2;
-      background:#fff; /* so white PNG edges look clean */
-    }
-
-    #finalOverlay.show #finalFrog{
-      transform: translateY(0) scale(1);
-      opacity:1;
-    }
-
-    /* reduced motion support */
-    @media (prefers-reduced-motion: reduce){
-      .heart{ animation:none; display:none; }
-      #finalOverlay.show{ animation:none; }
-      .finalCard{ animation:none; opacity:1; transform:none; }
-      .rose{ animation:none; display:none; }
-      #finalFrog{ transition:none; opacity:1; transform:none; }
-    }
-  </style>
+</style>
 </head>
 
 <body>
-  <div class="hearts" id="hearts"></div>
 
-  <div class="card">
-    <h1>Will you be my Valentine? 💘</h1>
-    <p class="sub">Please choose wisely.</p>
+<div class="hearts" id="hearts"></div>
 
-    <div class="arena" id="arena">
-      <button class="btn yes" id="yesBtn">Yes</button>
-      <button class="btn no" id="noBtn">No</button>
-    </div>
+<div class="card">
 
-    <div class="result" id="result">
-      <b>Question:</b> Will you be my Valentine?
-      <div class="small">Tip: try clicking “No”. I dare you.</div>
-    </div>
-  </div>
+<h1>Will you be my Valentine? 💘</h1>
 
-  <!-- 🐸 Final overlay (appears after YES) -->
-  <div id="finalOverlay" aria-hidden="true">
-    <div class="roseRain" aria-hidden="true"></div>
+<div class="arena" id="arena">
+<button class="yes" id="yesBtn">YES</button>
+<button class="no" id="noBtn">NO</button>
+</div>
 
-    <div class="finalCard" role="dialog" aria-modal="true">
+<div class="result">
+Try pressing NO 🙂
+</div>
+
+</div>
+
+<!-- 🐸 OVERLAY -->
+
+<div id="finalOverlay">
+
+<div class="roseRain"></div>
+
+<div class="finalCard">
+
 <div class="finalTop">FOR YOU</div>
 
 <div class="finalCenter">
-  <div class="kiss" id="kiss">💋</div>
-  <img id="finalFrog" src="frog.png" alt="frog with roses" />
-  <div class="hugsLine">(This agreement is legally binding and requires hugs.)</div>
+<div class="kiss">💋</div>
+<img id="finalFrog" src="frog.png">
+<div class="hugs">(This agreement is legally binding and requires hugs.)</div>
 </div>
 
 <div class="finalBottom">MON COEUR</div>
 
-    </div>
-  </div>
+</div>
+</div>
 
-  <script>
-    // ===== ❤️ Hearts (bigger + more frequent) =====
-    const heartsLayer = document.getElementById("hearts");
-    function createHeart() {
-      const h = document.createElement("div");
-      h.className = "heart";
-      const emojis = ["💖","💘","💗","💓","💕"];
-      h.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+<script>
 
-      h.style.left = (Math.random() * 100) + "vw";
-      h.style.fontSize = (30 + Math.random() * 34) + "px";     // BIGGER
-      h.style.animationDuration = (4.2 + Math.random() * 5.0) + "s";
+/* ❤️ HEARTS */
 
-      heartsLayer.appendChild(h);
-      setTimeout(() => h.remove(), 11000);
-    }
-    // MORE frequent
-    setInterval(createHeart, 140);
+const hearts=document.getElementById("hearts");
 
-    // ===== Buttons =====
-    const arena = document.getElementById("arena");
-    const noBtn = document.getElementById("noBtn");
-    const yesBtn = document.getElementById("yesBtn");
-    const result = document.getElementById("result");
+function createHeart(){
 
-    // Overlay elements
-    const finalOverlay = document.getElementById("finalOverlay");
-    const roseRain = document.querySelector(".roseRain");
+const h=document.createElement("div");
+h.className="heart";
+h.innerHTML=["💖","💘","💗","💓"][Math.floor(Math.random()*4)];
 
-    let isFinal = false;        // after YES -> freeze everything
-    let roseIntervalId = null;  // roses animation timer
+h.style.left=Math.random()*100+"vw";
+h.style.fontSize=(32+Math.random()*40)+"px";
+h.style.animationDuration=(4+Math.random()*4)+"s";
 
-    function randInt(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
+hearts.appendChild(h);
+setTimeout(()=>h.remove(),8000);
+}
 
-    function moveNoButton() {
-      const a = arena.getBoundingClientRect();
-      const b = noBtn.getBoundingClientRect();
-      const maxX = Math.max(0, Math.floor(a.width - b.width));
-      const maxY = Math.max(0, Math.floor(a.height - b.height));
-      noBtn.style.left = randInt(0, maxX) + "px";
-      noBtn.style.top  = randInt(0, maxY) + "px";
-    }
+setInterval(createHeart,130);
 
-    function panicIfClose(clientX, clientY) {
-      if (isFinal) return; // after YES: no movement, no text changes
 
-      const rect = noBtn.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top  + rect.height / 2;
-      const dx = clientX - cx;
-      const dy = clientY - cy;
-      const distance = Math.sqrt(dx * dx + dy * dy);
+/* 🏃 RUNNING NO */
 
-      if (distance < 140) moveNoButton();
-    }
+const arena=document.getElementById("arena");
+const no=document.getElementById("noBtn");
+const yes=document.getElementById("yesBtn");
 
-    // initial position
-    requestAnimationFrame(() => {
-      noBtn.style.left = "62%";
-      noBtn.style.top  = "58%";
-      moveNoButton();
-    });
+const result = document.querySelector(".result");
 
-    // desktop/stylus movement
-    arena.addEventListener("pointermove", (e) => panicIfClose(e.clientX, e.clientY));
+const taunts = [
+"Nope. Not today 😈",
+"The No button has left the chat.",
+"Nice try. Absolutely not.",
+"You almost had it. Almost.",
+"Error 404: No not found.",
+"This button believes in love only.",
+"Oopsie, try again.",
+"Access denied 💅",
+"Try harder.",
+"Your persistence is impressive.",
+"You vs destiny. Destiny is winning.",
+"Are you flirting with the No button?"
+];
 
-    // touch movement (mobile)
-    arena.addEventListener("touchmove", (e) => {
-      const t = e.touches && e.touches[0];
-      if (!t) return;
-      panicIfClose(t.clientX, t.clientY);
-    }, { passive: true });
 
-    // run away on tap attempt (mobile-friendly)
-    noBtn.addEventListener("pointerdown", (e) => {
-      if (isFinal) return;
-      e.preventDefault();
-      moveNoButton();
-    });
-    noBtn.addEventListener("touchstart", (e) => {
-      if (isFinal) return;
-      e.preventDefault();
-      moveNoButton();
-    }, { passive:false });
+function moveNo(){
 
-    // prevent successful click on NO
-    noBtn.addEventListener("click", (e) => {
-      if (isFinal) return;
-      e.preventDefault();
-      moveNoButton();
-    });
+const a=arena.getBoundingClientRect();
+const b=no.getBoundingClientRect();
 
-    // ===== 🌹 Roses animation in overlay =====
-    function spawnRose() {
-      const r = document.createElement("div");
-      r.className = "rose";
+no.style.left=Math.random()*(a.width-b.width)+"px";
+no.style.top=Math.random()*(a.height-b.height)+"px";
 
-      // mostly roses (with a tiny bit of "wilted" for texture)
-      const emojis = ["🌹","🌹","🌹","🌹","🥀"];
-      r.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+// 👇 показуємо taunt
+result.innerHTML = taunts[Math.floor(Math.random()*taunts.length)];
+}
 
-      r.style.left = (Math.random() * 100) + "vw";
-      r.style.fontSize = (22 + Math.random() * 34) + "px";
-      r.style.animationDuration = (2.6 + Math.random() * 2.8) + "s";
+const a=arena.getBoundingClientRect();
+const b=no.getBoundingClientRect();
 
-      roseRain.appendChild(r);
-      setTimeout(() => r.remove(), 8000);
-    }
+no.style.left=Math.random()*(a.width-b.width)+"px";
+no.style.top=Math.random()*(a.height-b.height)+"px";
+}
 
-    function startRoses() {
-      // burst
-      for (let i = 0; i < 18; i++) setTimeout(spawnRose, i * 55);
-      // continuous
-      roseIntervalId = setInterval(spawnRose, 160);
-    }
+arena.addEventListener("pointermove",e=>{
 
-    // ===== YES behavior (your requested final) =====
-    yesBtn.addEventListener("click", () => {
-      if (isFinal) return;
-      isFinal = true;
+const r=no.getBoundingClientRect();
 
-      // Freeze NO forever
-      noBtn.style.pointerEvents = "none";
-      noBtn.style.opacity = "0.18";
+const dx=e.clientX-(r.left+r.width/2);
+const dy=e.clientY-(r.top+r.height/2);
 
-      // After YES: stop changing text; keep ONLY hugs line (on page, optional)
-      result.innerHTML = "<span class='small'>(This agreement is legally binding and requires hugs.)</span>";
+if(Math.sqrt(dx*dx+dy*dy)<140){
+moveNo();
+}
+});
 
-      // Show overlay on top
-      finalOverlay.classList.add("show");
-      finalOverlay.setAttribute("aria-hidden", "false");
 
-      // Roses behind frog
-      if (roseIntervalId) clearInterval(roseIntervalId);
-      startRoses();
-    });
+/* 🌹 ROSES */
 
-    // keep NO inside arena on resize (only before final)
-    window.addEventListener("resize", () => {
-      if (!isFinal) moveNoButton();
-    });
-  </script>
+const overlay=document.getElementById("finalOverlay");
+const roseRain=document.querySelector(".roseRain");
+
+function spawnRose(){
+
+const r=document.createElement("div");
+r.className="rose";
+r.innerHTML=["🌹","🌹","🌹","🥀"][Math.floor(Math.random()*4)];
+
+r.style.left=Math.random()*100+"vw";
+r.style.fontSize=(26+Math.random()*36)+"px";
+r.style.animationDuration=(2.5+Math.random()*2.5)+"s";
+
+roseRain.appendChild(r);
+setTimeout(()=>r.remove(),6000);
+}
+
+
+/* YES CLICK */
+
+yes.addEventListener("click",()=>{
+
+overlay.classList.add("show");
+
+/* burst */
+for(let i=0;i<20;i++){
+setTimeout(spawnRose,i*60);
+}
+
+/* rain */
+setInterval(spawnRose,160);
+
+});
+
+</script>
 </body>
 </html>
