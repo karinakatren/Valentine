@@ -429,6 +429,8 @@
     "Romance is inevitable.",
     "You vs destiny. Destiny is winning.",
     "Are you flirting with the No button?"
+    "Ok ok… I get it 😅"
+    "The universe is aggressively shipping this."
   ];
 
   let isFinal = false;
@@ -486,8 +488,6 @@ function setTaunt(){
     const noScale = Math.max(0.80, 1 - noAttempts * 0.03);
     noBtn.style.transform = `scale(${noScale})`;
 
-    if (noAttempts === 6) result.textContent = "Ok ok… I get it 😅";
-    if (noAttempts === 8) result.textContent = "The universe is aggressively shipping this.";
   }
 
   /* initial NO position */
