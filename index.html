@@ -31,10 +31,35 @@
   transform: translateY(0);
 }
 
-#line1{
-  font-size: clamp(38px, 6vw, 72px);
-  font-weight:900;
+.finalLine{
+  margin-top:10px;
 }
+
+#line1{
+  font-size: clamp(42px, 6vw, 76px);
+  font-weight:900;
+  margin-bottom:18px;
+}
+
+
+#line2 {
+  font-size: clamp(18px, 2.8vw, 26px);
+  font-weight:500;
+  opacity:.75;
+}
+
+#line3{
+  font-size: clamp(18px, 2.8vw, 26px);
+  font-weight:600;
+  opacity:.9;
+}
+
+#line4{
+  font-size: clamp(18px, 2.8vw, 26px);
+  font-weight:600;
+  opacity:.9;
+}
+
 
 
 
@@ -369,9 +394,10 @@
     <div class="finalParticles" aria-hidden="true"></div>
 
 <div class="finalMessage">
-  <div class="finalLine" id="line1">Happy Valentine’s Day 💖</div>
+  <div class="finalLine" id="line1">Happy Valentine’s Day, Anastasiia 💖</div>
   <div class="finalLine" id="line2">I had a plan. It worked.</div>
-  <div class="finalLine" id="line3">I’m really glad I know you.</div>
+  <div class="finalLine" id="line3">And I guess you’re stuck with me now 😈</div>
+  <div class="finalLine" id="line4">I’m really glad I know you.</div>
 </div>
 
 <script>
@@ -544,6 +570,7 @@ noBtn.addEventListener("click", (e)=> {
     document.getElementById("line1"),
     document.getElementById("line2"),
     document.getElementById("line3")
+    document.getElementById("line4")
   ];
 
   lines.forEach(el => el.classList.remove("show"));
