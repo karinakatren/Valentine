@@ -20,36 +20,28 @@
     overflow:hidden;
   }
 
+  /* ===== Final text lines (appear one-by-one) ===== */
   .finalLine{
-  opacity:0;
-  transform: translateY(18px);
-  transition: opacity .6s ease, transform .6s ease;
-  margin-top:10px;
-  will-change: opacity, transform;
-}
+    opacity:0;
+    transform: translateY(18px);
+    transition: opacity .6s ease, transform .6s ease;
+    margin-top:10px;
+    will-change: opacity, transform;
+  }
+  .finalLine.show{
+    opacity:1;
+    transform: translateY(0);
+  }
 
-.finalLine.show{
-  opacity:1;
-  transform: translateY(0);
-}
-
-.finalLine{
-  margin-top:10px;
-}
-
-#line1{
-  font-size: clamp(30px, 4.6vw, 54px);
-  font-weight:900;
-  margin-bottom:14px;
-}
-
-#line2, #line3, #line4{
-  font-size: clamp(16px, 2.6vw, 22px);
-  font-weight:600;
-}
-
-
-
+  #line1{
+    font-size: clamp(30px, 4.6vw, 54px);
+    font-weight:900;
+    margin-bottom:14px;
+  }
+  #line2, #line3, #line4{
+    font-size: clamp(16px, 2.6vw, 22px);
+    font-weight:600;
+  }
 
   /* ========== Background hearts (main page) ========== */
   .hearts{
@@ -218,7 +210,7 @@
   @keyframes frogSpin{
     0%{ transform:scale(.2) rotate(-720deg); opacity:0; }
     70%{ transform:scale(1.1) rotate(20deg); opacity:1; }
-    100%{ transform:scale(1) rotate(0deg); opacity:1; } /* важливо для iPhone */
+    100%{ transform:scale(1) rotate(0deg); opacity:1; }
   }
 
   /* Kiss travels to the right and stays there */
@@ -310,20 +302,12 @@
   .finalMessage{
     position:relative;
     z-index:2;
-    font-size: clamp(34px, 5vw, 64px);
-    font-weight:800;
     text-align:center;
     padding:0 16px;
     text-shadow: 0 10px 30px rgba(0,0,0,.35);
   }
-  .finalSub{
-    margin-top:12px;
-    font-size:18px;
-    opacity:.88;
-    font-weight:600;
-  }
 
-  /* Mobile sharpness: reduce heavy blur on iPhone */
+  /* Mobile sharpness */
   @media (max-width:520px){
     .card, .finalCard{
       backdrop-filter:none;
@@ -381,15 +365,15 @@
   <div id="valentineFinal" aria-hidden="true">
     <div class="finalParticles" aria-hidden="true"></div>
 
-<div class="finalMessage">
-  <div class="finalLine" id="line1">Happy Valentine’s Day, Anastasiia 💖</div>
-  <div class="finalLine" id="line2">I had a plan. It worked.</div>
-  <div class="finalLine" id="line3">And I guess you’re stuck with me now 😈</div>
-  <div class="finalLine" id="line4">I’m really glad I know you.</div>
-</div>
+    <div class="finalMessage">
+      <div class="finalLine" id="line1">Happy Valentine’s Day, Anastasiia 💖</div>
+      <div class="finalLine" id="line2">I had a plan. It worked.</div>
+      <div class="finalLine" id="line3">And I guess you’re stuck with me now 😈</div>
+      <div class="finalLine" id="line4">I’m really glad I know you.</div>
+    </div>
+  </div>
 
 <script>
-
   /* ========= Background hearts (main page) ========= */
   const heartsLayer = document.getElementById("hearts");
   function createHeart(){
@@ -425,44 +409,41 @@
     "You almost had it. Almost.",
     "Error 404: No not found.",
     "This button believes in love only.",
-    "The universe is aggressively shipping this.",
     "Access denied 💅",
     "Romance is inevitable.",
     "You vs destiny. Destiny is winning.",
-    "Are you flirting with the No button?".
-    "Ok ok… I get it 😅"
-
-
+    "Are you flirting with the No button?",
+    "Ok ok… I get it 😅",
+    "The universe is aggressively shipping this."
   ];
 
   let isFinal = false;
 
-  /* taunts: no repeats + cooldown */
-let tauntHistory = [];
-const TAUNT_HISTORY_SIZE = 3;
-let lastTauntAt = 0;
-const TAUNT_COOLDOWN_MS = 900;
+  /* taunts: show ONLY when attempting to click NO, and avoid recent repeats */
+  let tauntHistory = [];
+  const TAUNT_HISTORY_SIZE = 3;
+  let lastTauntAt = 0;
+  const TAUNT_COOLDOWN_MS = 900;
 
-function setTaunt(){
-  const now = Date.now();
-  if (now - lastTauntAt < TAUNT_COOLDOWN_MS) return;
+  function setTaunt(){
+    const now = Date.now();
+    if (now - lastTauntAt < TAUNT_COOLDOWN_MS) return;
 
-  let idx;
-  let safety = 0;
+    let idx;
+    let safety = 0;
 
-  do {
-    idx = Math.floor(Math.random() * taunts.length);
-    safety++;
-    // якщо таунтів мало — не зациклитись
-    if (safety > 50) break;
-  } while (tauntHistory.includes(idx) && taunts.length > TAUNT_HISTORY_SIZE);
+    do {
+      idx = Math.floor(Math.random() * taunts.length);
+      safety++;
+      if (safety > 50) break;
+    } while (tauntHistory.includes(idx) && taunts.length > TAUNT_HISTORY_SIZE);
 
-  tauntHistory.push(idx);
-  if (tauntHistory.length > TAUNT_HISTORY_SIZE) tauntHistory.shift();
+    tauntHistory.push(idx);
+    if (tauntHistory.length > TAUNT_HISTORY_SIZE) tauntHistory.shift();
 
-  lastTauntAt = now;
-  result.textContent = taunts[idx];
-}
+    lastTauntAt = now;
+    result.textContent = taunts[idx];
+  }
 
   function moveNoButton(){
     if (isFinal) return;
@@ -498,31 +479,31 @@ function setTaunt(){
     moveNoButton();
   });
 
-  /* Desktop: escape ONLY when actually hovering NO */
+  /* Desktop: escape ONLY when actually hovering NO (no taunts here) */
   noBtn.addEventListener("pointerenter", () => moveNoButton());
   noBtn.addEventListener("mouseover", () => moveNoButton());
 
-  /* Mobile: escape when trying to tap NO */
-noBtn.addEventListener("pointerdown", (e)=> {
-  if (isFinal) return;
-  e.preventDefault();
-  setTaunt();       // ← таунт тільки тут
-  moveNoButton();
-});
+  /* Attempting to click NO triggers taunt */
+  noBtn.addEventListener("pointerdown", (e)=> {
+    if (isFinal) return;
+    e.preventDefault();
+    setTaunt();
+    moveNoButton();
+  });
 
-noBtn.addEventListener("touchstart", (e)=> {
-  if (isFinal) return;
-  e.preventDefault();
-  setTaunt();       // ← і тут
-  moveNoButton();
-}, { passive:false });
+  noBtn.addEventListener("touchstart", (e)=> {
+    if (isFinal) return;
+    e.preventDefault();
+    setTaunt();
+    moveNoButton();
+  }, { passive:false });
 
-noBtn.addEventListener("click", (e)=> {
-  if (isFinal) return;
-  e.preventDefault();
-  setTaunt();       // ← і тут
-  moveNoButton();
-});
+  noBtn.addEventListener("click", (e)=> {
+    if (isFinal) return;
+    e.preventDefault();
+    setTaunt();
+    moveNoButton();
+  });
 
   window.addEventListener("resize", () => { if(!isFinal) moveNoButton(); });
 
@@ -557,10 +538,7 @@ noBtn.addEventListener("click", (e)=> {
     const ids = ["line1","line2","line3","line4"];
     const els = ids.map(id => document.getElementById(id)).filter(Boolean);
 
-    // hide all first
     els.forEach(el => el.classList.remove("show"));
-
-    // show one-by-one
     els.forEach((el, i) => {
       setTimeout(() => el.classList.add("show"), 450 + i * 1200);
     });
@@ -573,18 +551,14 @@ noBtn.addEventListener("click", (e)=> {
     if (isFinal) return;
     isFinal = true;
 
-    // Freeze NO
     noBtn.style.pointerEvents = "none";
     noBtn.style.opacity = "0.18";
 
-    // Stop changing main text; keep it calm
     result.innerHTML = "<span class='small'>(tap “Yes” — the universe approves.)</span>";
 
-    // Show overlay
     finalOverlay.classList.add("show");
     finalOverlay.setAttribute("aria-hidden","false");
 
-    // Roses: burst + rain
     for (let i=0; i<18; i++) setTimeout(spawnRose, i*55);
     roseIntervalId = setInterval(spawnRose, 160);
   });
@@ -593,19 +567,16 @@ noBtn.addEventListener("click", (e)=> {
   finalOverlay.addEventListener("click", () => {
     if (!finalOverlay.classList.contains("show")) return;
 
-    // Stop roses and fully hide overlay so frog never shows behind
     if (roseIntervalId) clearInterval(roseIntervalId);
     roseIntervalId = null;
     roseRain.innerHTML = "";
     finalOverlay.classList.remove("show");
     finalOverlay.setAttribute("aria-hidden","true");
 
-    // Show final screen
     finalScreen.classList.add("show");
-    startFinalText();
     finalScreen.setAttribute("aria-hidden","false");
+    startFinalText();
 
-    // Start final hearts+flowers
     finalParticles.innerHTML = "";
     if (finalParticlesTimer) clearInterval(finalParticlesTimer);
     finalParticlesTimer = setInterval(spawnFinalParticle, 160);
