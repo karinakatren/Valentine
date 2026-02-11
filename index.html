@@ -263,20 +263,19 @@ button{
 #valentineFinal{
   position:fixed;
   inset:0;
- background: radial-gradient(circle at center,
+  background: radial-gradient(circle at center,
               rgba(26,15,58,.88),
               rgba(5,5,16,.92));
-}  display:grid;
+  display:grid;
   place-items:center;
   z-index:10000;
 
   opacity:0;
   pointer-events:none;
   transition: opacity .6s ease;
-}
 
-#valentineFinal{
   backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 #valentineFinal.show{
@@ -336,7 +335,6 @@ animation: kissTravel 1.6s cubic-bezier(.2,1.3,.3,1) .5s forwards;
 <body>
 
 <div class="hearts" id="hearts"></div>
-<div class="roseRain"></div>
 
 
 <div class="card">
@@ -477,6 +475,12 @@ const overlay = document.getElementById("finalOverlay");
 const roseRain = document.querySelector(".roseRain");
 const finalScreen = document.getElementById("valentineFinal");
 
+overlay.addEventListener("click", () => {
+  if (!overlay.classList.contains("show")) return;
+
+  finalScreen.classList.add("show");
+  finalScreen.setAttribute("aria-hidden", "false");
+});
 
 function spawnRose() {
   const r = document.createElement("div");
@@ -504,13 +508,6 @@ yes.addEventListener("click", () => {
 
   // show overlay
   overlay.classList.add("show");
-
-  overlay.addEventListener("click", () => {
-  if (!overlay.classList.contains("show")) return;
-
-  finalScreen.classList.add("show");
-  finalScreen.setAttribute("aria-hidden", "false");
-});
 
 
   // burst + rain
