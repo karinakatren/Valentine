@@ -20,6 +20,18 @@
     overflow:hidden;
   }
 
+  .finalLine{
+  opacity:0;
+  transform: translateY(18px);
+  transition: all .8s cubic-bezier(.2,.65,.25,1);
+}
+
+.finalLine.show{
+  opacity:1;
+  transform: translateY(0);
+}
+
+
   /* ========== Background hearts (main page) ========== */
   .hearts{
     position:fixed;
@@ -350,11 +362,11 @@
   <div id="valentineFinal" aria-hidden="true">
     <div class="finalParticles" aria-hidden="true"></div>
 
-    <div class="finalMessage" id="finalMessage">
-      Happy Valentine’s Day 💖
-      <div class="finalSub" id="finalSub">I’m really glad I know you.</div>
-    </div>
-  </div>
+<div class="finalMessage">
+  <div class="finalLine" id="line1">Happy Valentine’s Day 💖</div>
+  <div class="finalLine" id="line2">I had a plan. It worked.</div>
+  <div class="finalLine" id="line3">I’m really glad I know you.</div>
+</div>
 
 <script>
   /* ========= Customize text here ========= */
@@ -364,6 +376,11 @@
 
   document.getElementById("finalMessage").childNodes[0].textContent = FINAL_LINE_1 + " ";
   document.getElementById("finalSub").textContent = FINAL_LINE_2;
+
+  #line1{
+  font-size: clamp(38px, 6vw, 72px);
+  font-weight:900;
+}
 
   /* ========= Background hearts (main page) ========= */
   const heartsLayer = document.getElementById("hearts");
@@ -413,18 +430,31 @@
   let lastTauntAt = 0;
   const TAUNT_COOLDOWN_MS = 650;
 
-  function setTaunt(){
-    const now = Date.now();
-    if (now - lastTauntAt < TAUNT_COOLDOWN_MS) return;
+let tauntHistory = [];          // зберігаємо останні індекси
+const TAUNT_HISTORY_SIZE = 3;   // не повторюємо жоден з останніх 3
+let lastTauntAt = 0;
+const TAUNT_COOLDOWN_MS = 900;  // щоб не спамило при double-tap
 
-    let idx;
-    do { idx = Math.floor(Math.random() * taunts.length); }
-    while (idx === lastTauntIndex && taunts.length > 1);
+function setTaunt(){
+  const now = Date.now();
+  if (now - lastTauntAt < TAUNT_COOLDOWN_MS) return;
 
-    lastTauntIndex = idx;
-    lastTauntAt = now;
-    result.textContent = taunts[idx];
-  }
+  let idx;
+  let safety = 0;
+
+  do {
+    idx = Math.floor(Math.random() * taunts.length);
+    safety++;
+    // якщо таунтів мало — не зациклитись
+    if (safety > 50) break;
+  } while (tauntHistory.includes(idx) && taunts.length > TAUNT_HISTORY_SIZE);
+
+  tauntHistory.push(idx);
+  if (tauntHistory.length > TAUNT_HISTORY_SIZE) tauntHistory.shift();
+
+  lastTauntAt = now;
+  result.textContent = taunts[idx];
+}
 
   function moveNoButton(){
     if (isFinal) return;
@@ -437,7 +467,6 @@
     noBtn.style.left = (Math.random() * maxX) + "px";
     noBtn.style.top  = (Math.random() * maxY) + "px";
 
-    setTaunt();
     bumpYesPower();
   }
 
@@ -469,9 +498,26 @@
   noBtn.addEventListener("mouseover", () => moveNoButton());
 
   /* Mobile: escape when trying to tap NO */
-  noBtn.addEventListener("pointerdown", (e)=>{ if(!isFinal){ e.preventDefault(); moveNoButton(); } });
-  noBtn.addEventListener("touchstart", (e)=>{ if(!isFinal){ e.preventDefault(); moveNoButton(); } }, { passive:false });
-  noBtn.addEventListener("click", (e)=>{ if(!isFinal){ e.preventDefault(); moveNoButton(); } });
+noBtn.addEventListener("pointerdown", (e)=> {
+  if (isFinal) return;
+  e.preventDefault();
+  setTaunt();       // ← таунт тільки тут
+  moveNoButton();
+});
+
+noBtn.addEventListener("touchstart", (e)=> {
+  if (isFinal) return;
+  e.preventDefault();
+  setTaunt();       // ← і тут
+  moveNoButton();
+}, { passive:false });
+
+noBtn.addEventListener("click", (e)=> {
+  if (isFinal) return;
+  e.preventDefault();
+  setTaunt();       // ← і тут
+  moveNoButton();
+});
 
   window.addEventListener("resize", () => { if(!isFinal) moveNoButton(); });
 
@@ -501,6 +547,22 @@
     finalParticles.appendChild(el);
     setTimeout(()=>el.remove(), 9000);
   }
+
+  function startFinalText(){
+
+  const lines = [
+    document.getElementById("line1"),
+    document.getElementById("line2"),
+    document.getElementById("line3")
+  ];
+
+  lines.forEach(el => el.classList.remove("show"));
+
+  setTimeout(()=> lines[0].classList.add("show"), 400);
+  setTimeout(()=> lines[1].classList.add("show"), 1700);
+  setTimeout(()=> lines[2].classList.add("show"), 3000);
+}
+
   let finalParticlesTimer = null;
 
   /* ========= YES: show overlay ========= */
@@ -537,6 +599,7 @@
 
     // Show final screen
     finalScreen.classList.add("show");
+    startFinalText();
     finalScreen.setAttribute("aria-hidden","false");
 
     // Start final hearts+flowers
