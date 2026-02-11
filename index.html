@@ -31,6 +31,12 @@
   transform: translateY(0);
 }
 
+#line1{
+  font-size: clamp(38px, 6vw, 72px);
+  font-weight:900;
+}
+
+
 
   /* ========== Background hearts (main page) ========== */
   .hearts{
@@ -369,18 +375,6 @@
 </div>
 
 <script>
-  /* ========= Customize text here ========= */
-  const FINAL_NAME = "Anastasiia";
-  const FINAL_LINE_1 = `Happy Valentine’s Day, ${FINAL_NAME} 💖`;
-  const FINAL_LINE_2 = "I’m really glad I know you.";
-
-  document.getElementById("finalMessage").childNodes[0].textContent = FINAL_LINE_1 + " ";
-  document.getElementById("finalSub").textContent = FINAL_LINE_2;
-
-  #line1{
-  font-size: clamp(38px, 6vw, 72px);
-  font-weight:900;
-}
 
   /* ========= Background hearts (main page) ========= */
   const heartsLayer = document.getElementById("hearts");
@@ -426,14 +420,10 @@
   let isFinal = false;
 
   /* taunts: no repeats + cooldown */
-  let lastTauntIndex = -1;
-  let lastTauntAt = 0;
-  const TAUNT_COOLDOWN_MS = 650;
-
-let tauntHistory = [];          // зберігаємо останні індекси
-const TAUNT_HISTORY_SIZE = 3;   // не повторюємо жоден з останніх 3
+let tauntHistory = [];
+const TAUNT_HISTORY_SIZE = 3;
 let lastTauntAt = 0;
-const TAUNT_COOLDOWN_MS = 900;  // щоб не спамило при double-tap
+const TAUNT_COOLDOWN_MS = 900;
 
 function setTaunt(){
   const now = Date.now();
