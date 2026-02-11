@@ -114,6 +114,107 @@
     @media (prefers-reduced-motion: reduce){
       .heart{ animation:none; display:none; }
       #frogImg{ transition:none; transform:none; opacity:1; }
+      /* ===== FINAL OVERLAY (frog + roses) ===== */
+#finalOverlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  place-items:center;
+  z-index:9999;
+  background:rgba(0,0,0,0.55);
+}
+
+#finalOverlay.show{
+  display:grid;
+}
+
+.finalCard{
+  position:relative;
+  width:min(760px, 92vw);
+  padding:22px 18px 18px;
+  border-radius:22px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.14);
+  box-shadow:0 30px 90px rgba(0,0,0,0.55);
+  backdrop-filter: blur(10px);
+  text-align:center;
+  overflow:hidden;
+}
+
+/* Rose “petals” / icons falling behind frog */
+.roseRain{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+.rose{
+  position:absolute;
+  top:-40px;
+  font-size:28px;
+  opacity:.9;
+  animation: roseFall linear forwards;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,.35));
+}
+@keyframes roseFall{
+  to{
+    transform: translateY(110vh) rotate(40deg);
+    opacity:0;
+  }
+}
+
+.finalText{
+  position:relative;
+  z-index:2;
+  margin-bottom:12px;
+}
+
+.forYou{
+  font-weight:900;
+  letter-spacing:1.4px;
+  font-size: clamp(28px, 4vw, 44px);
+  text-transform: uppercase;
+}
+
+.monCoeur{
+  font-weight:900;
+  letter-spacing:1.2px;
+  font-size: clamp(26px, 4vw, 46px);
+  text-transform: uppercase;
+  margin-top:6px;
+}
+
+.hugsLine{
+  margin-top:10px;
+  opacity:.92;
+  font-size: 14px;
+}
+
+/* Frog pop-in animation */
+#finalFrog{
+  width:min(420px, 88vw);
+  border-radius:20px;
+  box-shadow:0 26px 70px rgba(0,0,0,.55);
+  transform: translateY(18px) scale(.86);
+  opacity:0;
+  transition: transform .65s cubic-bezier(.2,1.35,.25,1), opacity .35s ease;
+  position:relative;
+  z-index:2;
+}
+
+/* when overlay is shown */
+#finalOverlay.show #finalFrog{
+  transform: translateY(0) scale(1);
+  opacity:1;
+}
+
+/* Optional: tap anywhere to close (we'll add JS) */
+#finalOverlay{
+  cursor:pointer;
+}
+.finalCard{
+  cursor:default;
+}
     }
   </style>
 </head>
@@ -150,12 +251,12 @@
       const emojis = ["💖","💘","💗","💓","💕"];
       h.textContent = emojis[Math.floor(Math.random() * emojis.length)];
       h.style.left = (Math.random() * 100) + "vw";
-      h.style.fontSize = (16 + Math.random() * 22) + "px";
+      h.style.fontSize = (28 + Math.random() * 32) + "px";
       h.style.animationDuration = (4 + Math.random() * 5) + "s";
       heartsLayer.appendChild(h);
       setTimeout(() => h.remove(), 10000);
     }
-    setInterval(createHeart, 320);
+   setInterval(createHeart, 140);
 
     // ===== 🏃 No button panic (desktop + mobile) =====
     const arena = document.getElementById("arena");
@@ -223,7 +324,56 @@
     const frogBox = document.getElementById("frogBox");
     const frogImg = document.getElementById("frogImg");
 
-    yesBtn.addEventListener("click", () => {
+const finalOverlay = document.getElementById("finalOverlay");
+const roseRain = document.querySelector(".roseRain");
+
+function spawnRose() {
+  const r = document.createElement("div");
+  r.className = "rose";
+  // roses / petals vibe (no text)
+  const emojis = ["🌹","🌹","🌹","🥀"]; // heavier on roses
+  r.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+  r.style.left = (Math.random() * 100) + "vw";
+  r.style.fontSize = (22 + Math.random() * 30) + "px";
+  r.style.animationDuration = (2.8 + Math.random() * 2.6) + "s";
+
+  roseRain.appendChild(r);
+  setTimeout(() => r.remove(), 7000);
+}
+
+let roseIntervalId = null;
+
+yesBtn.addEventListener("click", () => {
+  // 1) Stop all NO behavior / texts
+  noBtn.style.pointerEvents = "none";
+  noBtn.style.opacity = "0.18";
+
+  // Remove taunts / freeze result text to hugs line only
+  result.innerHTML = "<span class='small'>(This agreement is legally binding and requires hugs.)</span>";
+
+  // 2) Show overlay with frog
+  finalOverlay.classList.add("show");
+  finalOverlay.setAttribute("aria-hidden", "false");
+
+  // 3) Start rose rain behind frog
+  if (roseIntervalId) clearInterval(roseIntervalId);
+  // spawn a quick burst first
+  for (let i = 0; i < 16; i++) setTimeout(spawnRose, i * 60);
+  // then keep raining
+  roseIntervalId = setInterval(spawnRose, 170);
+});
+
+// Tap outside to close overlay (optional, but nice)
+finalOverlay.addEventListener("click", () => {
+  finalOverlay.classList.remove("show");
+  finalOverlay.setAttribute("aria-hidden", "true");
+  if (roseIntervalId) clearInterval(roseIntervalId);
+  roseRain.innerHTML = "";
+});
+
+// prevent closing when clicking the card itself
+document.querySelector(".finalCard").addEventListener("click", (e) => e.stopPropagation());
       result.innerHTML =
         "✅ <b>YES accepted.</b> You are now officially my Valentine.<br>" +
         "<span class='small'>(This agreement is legally binding and requires hugs.)</span>";
@@ -233,6 +383,7 @@
       requestAnimationFrame(() => {
         frogImg.style.opacity = "1";
         frogImg.style.transform = "scale(1)";
+        
       });
 
       // bonus heart storm
@@ -244,5 +395,18 @@
 
     window.addEventListener("resize", moveNoButton);
   </script>
+  <!-- 🐸 Final overlay -->
+<div id="finalOverlay" aria-hidden="true">
+  <div class="roseRain" aria-hidden="true"></div>
+  <div class="finalCard" role="dialog" aria-modal="true">
+    <div class="finalText">
+      <div class="forYou">FOR YOU</div>
+      <div class="monCoeur">MON COEUR</div>
+      <div class="hugsLine">(This agreement is legally binding and requires hugs.)</div>
+    </div>
+
+    <img id="finalFrog" src="frog.png" alt="frog with roses" />
+  </div>
+</div>
 </body>
 </html>
