@@ -425,25 +425,22 @@
   let lastTauntAt = 0;
   const TAUNT_COOLDOWN_MS = 900;
 
-  function setTaunt(){
-    const now = Date.now();
-    if (now - lastTauntAt < TAUNT_COOLDOWN_MS) return;
+let lastTauntIndex = -1;
 
-    let idx;
-    let safety = 0;
-
+function setTaunt(force = false){
+  // force лишаємо на майбутнє, але зараз не блокуємо
+  let idx;
+  if (taunts.length <= 1){
+    idx = 0;
+  } else {
     do {
       idx = Math.floor(Math.random() * taunts.length);
-      safety++;
-      if (safety > 50) break;
-    } while (tauntHistory.includes(idx) && taunts.length > TAUNT_HISTORY_SIZE);
-
-    tauntHistory.push(idx);
-    if (tauntHistory.length > TAUNT_HISTORY_SIZE) tauntHistory.shift();
-
-    lastTauntAt = now;
-    result.textContent = taunts[idx];
+    } while (idx === lastTauntIndex);
   }
+
+  lastTauntIndex = idx;
+  result.textContent = taunts[idx];
+}
 
   function moveNoButton(){
     if (isFinal) return;
@@ -480,8 +477,17 @@
   });
 
   /* Desktop: escape ONLY when actually hovering NO (no taunts here) */
-  noBtn.addEventListener("pointerenter", () => moveNoButton());
-  noBtn.addEventListener("mouseover", () => moveNoButton());
+noBtn.addEventListener("pointerenter", () => {
+  if (isFinal) return;
+  setTaunt(true);
+  moveNoButton();
+});
+noBtn.addEventListener("mouseover", () => {
+  if (isFinal) return;
+  setTaunt(true);
+  moveNoButton();
+});
+
 
   /* Attempting to click NO triggers taunt */
   noBtn.addEventListener("pointerdown", (e)=> {
