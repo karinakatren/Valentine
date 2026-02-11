@@ -40,7 +40,7 @@ body{
 
 @keyframes floatUp{
   to{
-    transform:translateY(-120vh);
+    transform: translate3d(0,-120vh,0) rotate(12deg);
     opacity:0;
   }
 }
@@ -92,6 +92,23 @@ button{
   opacity:.95;
 }
 
+/* iPhone/Safari performance + sharpness fixes */
+@media (max-width: 520px){
+  .card,
+  .finalCard{
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(255,255,255,0.10); /* трохи щільніше, щоб не втратити "скло" */
+  }
+
+  /* прибираємо важкі тіні/фільтри, які замилюють */
+  .heart,
+  .rose{
+    filter: none !important;
+  }
+}
+
+
 /* ============================= */
 /* 🐸 FINAL OVERLAY */
 /* ============================= */
@@ -125,7 +142,7 @@ button{
 
 @keyframes roseFall{
   to{
-    transform:translateY(120vh) rotate(50deg);
+    transform: translate3d(0,120vh,0) rotate(50deg);
     opacity:0;
   }
 }
@@ -199,18 +216,47 @@ button{
 
 .kiss{
   position:absolute;
-  top:18%;
-  right:32%; /* старт — біля мордочки */
-  font-size:56px;
+  top: 16%;
+  left: 62%;              /* старт поруч з жабою */
+  font-size: clamp(38px, 6vw, 56px);
   opacity:0;
-  transform: scale(.2);
+  transform: translateX(0) scale(.2);
+  z-index: 5;
+  pointer-events:none;
+}
+
+#finalOverlay.show .kiss{
+  animation: kissTravel 1.6s cubic-bezier(.2,1.3,.3,1) forwards;
+}
+
+@keyframes kissTravel{
+  0%   { opacity:0; transform: translateX(0) scale(.2); }
+  25%  { opacity:1; transform: translateX(0) scale(1.25); }
+  55%  { opacity:1; transform: translateX(0) scale(1); }
+  100% { opacity:.95; transform: translateX(12vw) scale(1); } /* адаптивний “політ” */
+}
+
+@media (max-width: 480px){
+  .kiss{
+    left: 58%;
+    top: 14%;
+  }
+  @keyframes kissTravel{
+    100% { opacity:.95; transform: translateX(8vw) scale(1); }
+  }
 }
 
 /* tap hint under frog */
 .tapHint{
-  margin-top:8px;
-  font-size:13px;
-  opacity:.65;
+  margin-top:10px;
+  font-size: clamp(16px, 2.6vw, 20px);
+  opacity:.75;
+  animation: tapPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes tapPulse{
+  0%,100%{ opacity:.55; }
+  50%{ opacity:1; }
 }
 
 /* FINAL SCREEN */
@@ -314,7 +360,7 @@ Try pressing NO, I dare you!
 <div class="kiss">💋</div>
 <img id="finalFrog" src="frog.png">
 <div class="hugs">This agreement is legally binding and requires hugs.</div>
-<div class="tapHint">(tap anywhere)</div>
+<div class="tapHint">(Please, tap anywhere ✨)</div>
 </div>
 
 <div class="finalBottom">MON COEUR</div>
