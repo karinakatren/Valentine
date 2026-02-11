@@ -247,7 +247,7 @@ button{
 </div>
 
 <div class="result">
-Try pressing NO 🙂
+Try pressing NO, I dare you!
 </div>
 
 </div>
@@ -274,120 +274,117 @@ Try pressing NO 🙂
 </div>
 
 <script>
-
 /* ❤️ HEARTS */
+const hearts = document.getElementById("hearts");
 
-const hearts=document.getElementById("hearts");
+function createHeart() {
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.textContent = ["💖","💘","💗","💓","💕"][Math.floor(Math.random()*5)];
 
-function createHeart(){
+  h.style.left = Math.random()*100 + "vw";
+  h.style.fontSize = (32 + Math.random()*40) + "px";
+  h.style.animationDuration = (4 + Math.random()*4) + "s";
 
-const h=document.createElement("div");
-h.className="heart";
-h.innerHTML=["💖","💘","💗","💓"][Math.floor(Math.random()*4)];
-
-h.style.left=Math.random()*100+"vw";
-h.style.fontSize=(32+Math.random()*40)+"px";
-h.style.animationDuration=(4+Math.random()*4)+"s";
-
-hearts.appendChild(h);
-setTimeout(()=>h.remove(),8000);
+  hearts.appendChild(h);
+  setTimeout(() => h.remove(), 9000);
 }
+setInterval(createHeart, 130);
 
-setInterval(createHeart,130);
 
-
-/* 🏃 RUNNING NO */
-
-const arena=document.getElementById("arena");
-const no=document.getElementById("noBtn");
-const yes=document.getElementById("yesBtn");
-
+/* 🏃 RUNNING NO + TAUNTS */
+const arena = document.getElementById("arena");
+const no = document.getElementById("noBtn");
+const yes = document.getElementById("yesBtn");
 const result = document.querySelector(".result");
 
 const taunts = [
-"Nope. Not today 😈",
-"The No button has left the chat.",
-"Nice try. Absolutely not.",
-"You almost had it. Almost.",
-"Error 404: No not found.",
-"This button believes in love only.",
-"Oopsie, try again.",
-"Access denied 💅",
-"Try harder.",
-"Your persistence is impressive.",
-"You vs destiny. Destiny is winning.",
-"Are you flirting with the No button?"
+  "Nope. Not today 😈",
+  "The No button has left the chat.",
+  "Nice try. Absolutely not.",
+  "Oopsie, try again.",
+  "You almost had it. Almost.",
+  "Error 404: No not found.",
+  "This button believes in love only.",
+  "Access denied 💅",
+  "Romance is inevitable.",
+  "You vs destiny. Destiny is winning.",
+  "Are you flirting with the No button?"
 ];
 
+let isFinal = false;
 
-function moveNo(){
+function moveNo() {
+  if (isFinal) return;
 
-const a=arena.getBoundingClientRect();
-const b=no.getBoundingClientRect();
+  const a = arena.getBoundingClientRect();
+  const b = no.getBoundingClientRect();
 
-no.style.left=Math.random()*(a.width-b.width)+"px";
-no.style.top=Math.random()*(a.height-b.height)+"px";
+  const maxX = Math.max(0, a.width - b.width);
+  const maxY = Math.max(0, a.height - b.height);
 
-// 👇 показуємо taunt
-result.innerHTML = taunts[Math.floor(Math.random()*taunts.length)];
+  no.style.left = (Math.random() * maxX) + "px";
+  no.style.top  = (Math.random() * maxY) + "px";
+
+  result.textContent = taunts[Math.floor(Math.random() * taunts.length)];
 }
 
-const a=arena.getBoundingClientRect();
-const b=no.getBoundingClientRect();
+// стартова позиція
+requestAnimationFrame(moveNo);
 
-no.style.left=Math.random()*(a.width-b.width)+"px";
-no.style.top=Math.random()*(a.height-b.height)+"px";
-}
+// паніка від наближення курсора/пальця
+arena.addEventListener("pointermove", (e) => {
+  if (isFinal) return;
 
-arena.addEventListener("pointermove",e=>{
+  const r = no.getBoundingClientRect();
+  const dx = e.clientX - (r.left + r.width/2);
+  const dy = e.clientY - (r.top  + r.height/2);
 
-const r=no.getBoundingClientRect();
-
-const dx=e.clientX-(r.left+r.width/2);
-const dy=e.clientY-(r.top+r.height/2);
-
-if(Math.sqrt(dx*dx+dy*dy)<140){
-moveNo();
-}
+  if (Math.sqrt(dx*dx + dy*dy) < 140) moveNo();
 });
+
+// мобільний: тікає при спробі натиснути
+no.addEventListener("pointerdown", (e) => { if (!isFinal) { e.preventDefault(); moveNo(); } });
+no.addEventListener("touchstart",  (e) => { if (!isFinal) { e.preventDefault(); moveNo(); } }, { passive:false });
+no.addEventListener("click",       (e) => { if (!isFinal) { e.preventDefault(); moveNo(); } });
 
 
 /* 🌹 ROSES */
+const overlay = document.getElementById("finalOverlay");
+const roseRain = document.querySelector(".roseRain");
 
-const overlay=document.getElementById("finalOverlay");
-const roseRain=document.querySelector(".roseRain");
+function spawnRose() {
+  const r = document.createElement("div");
+  r.className = "rose";
+  r.textContent = ["🌹","🌹","🌹","🌹","🥀"][Math.floor(Math.random()*5)];
 
-function spawnRose(){
+  r.style.left = Math.random()*100 + "vw";
+  r.style.fontSize = (26 + Math.random()*36) + "px";
+  r.style.animationDuration = (2.5 + Math.random()*2.5) + "s";
 
-const r=document.createElement("div");
-r.className="rose";
-r.innerHTML=["🌹","🌹","🌹","🥀"][Math.floor(Math.random()*4)];
-
-r.style.left=Math.random()*100+"vw";
-r.style.fontSize=(26+Math.random()*36)+"px";
-r.style.animationDuration=(2.5+Math.random()*2.5)+"s";
-
-roseRain.appendChild(r);
-setTimeout(()=>r.remove(),6000);
+  roseRain.appendChild(r);
+  setTimeout(() => r.remove(), 6500);
 }
 
+let roseIntervalId = null;
 
 /* YES CLICK */
+yes.addEventListener("click", () => {
+  if (isFinal) return;
+  isFinal = true;
 
-yes.addEventListener("click",()=>{
+  // stop NO
+  no.style.pointerEvents = "none";
+  no.style.opacity = "0.18";
 
-overlay.classList.add("show");
+  // show overlay
+  overlay.classList.add("show");
 
-/* burst */
-for(let i=0;i<20;i++){
-setTimeout(spawnRose,i*60);
-}
-
-/* rain */
-setInterval(spawnRose,160);
-
+  // burst + rain
+  for (let i = 0; i < 20; i++) setTimeout(spawnRose, i * 60);
+  roseIntervalId = setInterval(spawnRose, 160);
 });
-
 </script>
+
 </body>
 </html>
