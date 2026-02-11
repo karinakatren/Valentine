@@ -415,6 +415,8 @@ const taunts = [
   "Are you flirting with the No button?"
 ];
 
+let lastTauntIndex = -1;
+
 let lastTauntAt = 0;
 const TAUNT_COOLDOWN_MS = 700;
 
@@ -433,8 +435,15 @@ function moveNo(){
 
   const now = Date.now();
   if (now - lastTauntAt > TAUNT_COOLDOWN_MS) {
-    result.textContent = taunts[Math.floor(Math.random() * taunts.length)];
-    lastTauntAt = now;
+let newIndex;
+
+do{
+  newIndex = Math.floor(Math.random() * taunts.length);
+} while(newIndex === lastTauntIndex);
+
+lastTauntIndex = newIndex;
+result.textContent = taunts[newIndex];
+lastTauntAt = now;
   }
 }
 
